@@ -16,6 +16,7 @@ import {
   redirect,
 } from "@tanstack/react-router"
 import { type SubmitHandler, useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 
 import Logo from "/assets/images/fastapi-logo.svg"
 import type { UserRegister } from "../client"
@@ -38,6 +39,7 @@ interface UserRegisterForm extends UserRegister {
 }
 
 function SignUp() {
+  const { t } = useTranslation()
   const { signUpMutation } = useAuth()
   const {
     register,
@@ -74,7 +76,7 @@ function SignUp() {
         >
           <Image
             src={Logo}
-            alt="FastAPI logo"
+            alt={t("signup.logoAlt")}
             height="auto"
             maxW="2xs"
             alignSelf="center"
@@ -82,13 +84,13 @@ function SignUp() {
           />
           <FormControl id="full_name" isInvalid={!!errors.full_name}>
             <FormLabel htmlFor="full_name" srOnly>
-              Full Name
+              {t("signup.fullName")}
             </FormLabel>
             <Input
               id="full_name"
               minLength={3}
-              {...register("full_name", { required: "Full Name is required" })}
-              placeholder="Full Name"
+              {...register("full_name", { required: t("signup.fullNameRequired") })}
+              placeholder={t("signup.fullNamePlaceholder")}
               type="text"
             />
             {errors.full_name && (
@@ -97,15 +99,15 @@ function SignUp() {
           </FormControl>
           <FormControl id="email" isInvalid={!!errors.email}>
             <FormLabel htmlFor="email" srOnly>
-              Email
+              {t("signup.email")}
             </FormLabel>
             <Input
               id="email"
               {...register("email", {
-                required: "Email is required",
+                required: t("signup.emailRequired"),
                 pattern: emailPattern,
               })}
-              placeholder="Email"
+              placeholder={t("signup.emailPlaceholder")}
               type="email"
             />
             {errors.email && (
@@ -114,12 +116,12 @@ function SignUp() {
           </FormControl>
           <FormControl id="password" isInvalid={!!errors.password}>
             <FormLabel htmlFor="password" srOnly>
-              Password
+              {t("signup.password")}
             </FormLabel>
             <Input
               id="password"
               {...register("password", passwordRules())}
-              placeholder="Password"
+              placeholder={t("signup.passwordPlaceholder")}
               type="password"
             />
             {errors.password && (
@@ -131,13 +133,13 @@ function SignUp() {
             isInvalid={!!errors.confirm_password}
           >
             <FormLabel htmlFor="confirm_password" srOnly>
-              Confirm Password
+              {t("signup.confirmPassword")}
             </FormLabel>
 
             <Input
               id="confirm_password"
               {...register("confirm_password", confirmPasswordRules(getValues))}
-              placeholder="Repeat Password"
+              placeholder={t("signup.confirmPasswordPlaceholder")}
               type="password"
             />
             {errors.confirm_password && (
@@ -147,12 +149,12 @@ function SignUp() {
             )}
           </FormControl>
           <Button variant="primary" type="submit" isLoading={isSubmitting}>
-            Sign Up
+            {t("signup.signUpButton")}
           </Button>
           <Text>
-            Already have an account?{" "}
+            {t("signup.alreadyHaveAccount")}{" "}
             <Link as={RouterLink} to="/login" color="blue.500">
-              Log In
+              {t("signup.login")}
             </Link>
           </Text>
         </Container>

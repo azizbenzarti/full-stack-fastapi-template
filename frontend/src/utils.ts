@@ -1,4 +1,5 @@
 import type { ApiError } from "./client"
+import { useTranslation } from "react-i18next"
 
 export const emailPattern = {
   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -11,15 +12,16 @@ export const namePattern = {
 }
 
 export const passwordRules = (isRequired = true) => {
+  const { t } = useTranslation()
   const rules: any = {
     minLength: {
       value: 8,
-      message: "Password must be at least 8 characters",
+      message: t("signup.passwordMinLength"),
     },
   }
 
   if (isRequired) {
-    rules.required = "Password is required"
+    rules.required = t("signup.passwordRequired")
   }
 
   return rules
@@ -29,15 +31,16 @@ export const confirmPasswordRules = (
   getValues: () => any,
   isRequired = true,
 ) => {
+  const { t } = useTranslation()
   const rules: any = {
     validate: (value: string) => {
       const password = getValues().password || getValues().new_password
-      return value === password ? true : "The passwords do not match"
+      return value === password ? true : t("signup.passwordsDoNotMatch")
     },
   }
 
   if (isRequired) {
-    rules.required = "Password confirmation is required"
+    rules.required = t("signup.confirmPasswordRequired")
   }
 
   return rules
