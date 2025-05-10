@@ -1,20 +1,21 @@
-import { Container, Image, Input, Text } from "@chakra-ui/react"
+import { Container, Image, Input, Text } from "@chakra-ui/react";
 import {
   Link as RouterLink,
   createFileRoute,
   redirect,
-} from "@tanstack/react-router"
-import { type SubmitHandler, useForm } from "react-hook-form"
-import { FiLock, FiMail } from "react-icons/fi"
+} from "@tanstack/react-router";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import { FiLock, FiMail } from "react-icons/fi";
+import { useTranslation } from "react-i18next"; // Add this import
 
-import type { Body_login_login_access_token as AccessToken } from "@/client"
-import { Button } from "@/components/ui/button"
-import { Field } from "@/components/ui/field"
-import { InputGroup } from "@/components/ui/input-group"
-import { PasswordInput } from "@/components/ui/password-input"
-import useAuth, { isLoggedIn } from "@/hooks/useAuth"
-import Logo from "/assets/images/fastapi-logo.svg"
-import { emailPattern, passwordRules } from "../utils"
+import type { Body_login_login_access_token as AccessToken } from "@/client";
+import { Button } from "@/components/ui/button";
+import { Field } from "@/components/ui/field";
+import { InputGroup } from "@/components/ui/input-group";
+import { PasswordInput } from "@/components/ui/password-input";
+import useAuth, { isLoggedIn } from "@/hooks/useAuth";
+import Logo from "/assets/images/fastapi-logo.svg";
+import { emailPattern, passwordRules } from "../utils";
 
 export const Route = createFileRoute("/login")({
   component: Login,
@@ -22,13 +23,14 @@ export const Route = createFileRoute("/login")({
     if (isLoggedIn()) {
       throw redirect({
         to: "/",
-      })
+      });
     }
   },
-})
+});
 
 function Login() {
-  const { loginMutation, error, resetError } = useAuth()
+  const { t } = useTranslation(["auth", "common"]); // Initialize translation
+  const { loginMutation, error, resetError } = useAuth();
   const {
     register,
     handleSubmit,
@@ -40,19 +42,19 @@ function Login() {
       username: "",
       password: "",
     },
-  })
+  });
 
   const onSubmit: SubmitHandler<AccessToken> = async (data) => {
-    if (isSubmitting) return
+    if (isSubmitting) return;
 
-    resetError()
+    resetError();
 
     try {
-      await loginMutation.mutateAsync(data)
+      await loginMutation.mutateAsync(data);
     } catch {
       // error is handled by useAuth hook
     }
-  }
+  };
 
   return (
     <>
@@ -68,7 +70,7 @@ function Login() {
       >
         <Image
           src={Logo}
-          alt="FastAPI logo"
+          alt={t("login.logo_alt")} // Translated alt text
           height="auto"
           maxW="2xs"
           alignSelf="center"
@@ -82,10 +84,13 @@ function Login() {
             <Input
               id="username"
               {...register("username", {
-                required: "Username is required",
-                pattern: emailPattern,
+                required: t("errors.required"), // Translated validation
+                pattern: {
+                  value: emailPattern,
+                  message: t("errors.invalid_email"), // Translated validation
+                },
               })}
-              placeholder="Email"
+              placeholder={t("login.email_placeholder")} // Translated placeholder
               type="email"
             />
           </InputGroup>
@@ -93,23 +98,26 @@ function Login() {
         <PasswordInput
           type="password"
           startElement={<FiLock />}
-          {...register("password", passwordRules())}
-          placeholder="Password"
+          {...register("password", {
+            ...passwordRules(),
+            required: t("errors.required"), // Translated validation
+          })}
+          placeholder={t("login.password_placeholder")} // Translated placeholder
           errors={errors}
         />
         <RouterLink to="/recover-password" className="main-link">
-          Forgot Password?
+          {t("login.forgot_password")} {/* Translated link */}
         </RouterLink>
         <Button variant="solid" type="submit" loading={isSubmitting} size="md">
-          Log In
+          {t("login.submit_button")} {/* Translated button */}
         </Button>
         <Text>
-          Don't have an account?{" "}
+          {t("login.no_account_text")} {/* Translated text */}
           <RouterLink to="/signup" className="main-link">
-            Sign Up
+            {t("login.signup_link")} {/* Translated link */}
           </RouterLink>
         </Text>
       </Container>
     </>
-  )
+  );
 }

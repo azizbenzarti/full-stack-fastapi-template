@@ -1,0 +1,17 @@
+{
+  "email": {
+    "invalid": "Please enter a valid email address"
+  },
+  "name": {
+    "invalid": "Please enter a valid name"
+  },
+  "password": {
+    "required": "Password is required",
+    "min_length": "Password must be at least 8 characters",
+    "mismatch": "The passwords do not match",
+    "confirm_required": "Password confirmation is required"
+  },
+  "errors": {
+    "generic": "Something went wrong"
+  }
+}
