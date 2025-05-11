@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react"
 import { useQueryClient } from "@tanstack/react-query"
 import { FiLogOut, FiMenu } from "react-icons/fi"
+import { useTranslation } from "react-i18next"
 
 import Logo from "/assets/images/fastapi-logo.svg"
 import type { UserPublic } from "../../client"
@@ -28,6 +29,7 @@ const Sidebar = () => {
   const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"])
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { logout } = useAuth()
+  const { t } = useTranslation()
 
   const handleLogout = async () => {
     logout()
@@ -39,7 +41,7 @@ const Sidebar = () => {
       <IconButton
         onClick={onOpen}
         display={{ base: "flex", md: "none" }}
-        aria-label="Open Menu"
+        aria-label={t('common.openMenu')}
         position="absolute"
         fontSize="20px"
         m={4}
@@ -52,7 +54,7 @@ const Sidebar = () => {
           <DrawerBody py={8}>
             <Flex flexDir="column" justify="space-between">
               <Box>
-                <Image src={Logo} alt="logo" p={6} />
+                <Image src={Logo} alt={t('common.logo')} p={6} />
                 <SidebarItems onClose={onClose} />
                 <Flex
                   as="button"
@@ -63,12 +65,12 @@ const Sidebar = () => {
                   alignItems="center"
                 >
                   <FiLogOut />
-                  <Text ml={2}>Log out</Text>
+                  <Text ml={2}>{t('auth.logout')}</Text>
                 </Flex>
               </Box>
               {currentUser?.email && (
                 <Text color={textColor} noOfLines={2} fontSize="sm" p={2}>
-                  Logged in as: {currentUser.email}
+                  {t('common.loggedInAs')}: {currentUser.email}
                 </Text>
               )}
             </Flex>
@@ -93,7 +95,7 @@ const Sidebar = () => {
           borderRadius={12}
         >
           <Box>
-            <Image src={Logo} alt="Logo" w="180px" maxW="2xs" p={6} />
+            <Image src={Logo} alt={t('common.logo')} w="180px" maxW="2xs" p={6} />
             <SidebarItems />
           </Box>
           {currentUser?.email && (
@@ -104,7 +106,7 @@ const Sidebar = () => {
               p={2}
               maxW="180px"
             >
-              Logged in as: {currentUser.email}
+              {t('common.loggedInAs')}: {currentUser.email}
             </Text>
           )}
         </Flex>

@@ -10,6 +10,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import React from "react"
 import { useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 
 import { ItemsService, UsersService } from "../../client"
 import useCustomToast from "../../hooks/useCustomToast"
@@ -25,6 +26,7 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
   const queryClient = useQueryClient()
   const showToast = useCustomToast()
   const cancelRef = React.useRef<HTMLButtonElement | null>(null)
+  const { t } = useTranslation()
   const {
     handleSubmit,
     formState: { isSubmitting },
@@ -44,16 +46,16 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
     mutationFn: deleteEntity,
     onSuccess: () => {
       showToast(
-        "Success",
-        `The ${type.toLowerCase()} was deleted successfully.`,
+        t('common.success'),
+        t('common.deleteSuccess', { type: type.toLowerCase() }),
         "success",
       )
       onClose()
     },
     onError: () => {
       showToast(
-        "An error occurred.",
-        `An error occurred while deleting the ${type.toLowerCase()}.`,
+        t('common.error'),
+        t('common.deleteError', { type: type.toLowerCase() }),
         "error",
       )
     },
@@ -79,28 +81,27 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
       >
         <AlertDialogOverlay>
           <AlertDialogContent as="form" onSubmit={handleSubmit(onSubmit)}>
-            <AlertDialogHeader>Delete {type}</AlertDialogHeader>
+            <AlertDialogHeader>{t('common.delete')} {type}</AlertDialogHeader>
 
             <AlertDialogBody>
               {type === "User" && (
                 <span>
-                  All items associated with this user will also be{" "}
-                  <strong>permantly deleted. </strong>
+                  {t('common.userDeleteWarning')}
                 </span>
               )}
-              Are you sure? You will not be able to undo this action.
+              {t('common.deleteConfirmation')}
             </AlertDialogBody>
 
             <AlertDialogFooter gap={3}>
               <Button variant="danger" type="submit" isLoading={isSubmitting}>
-                Delete
+                {t('common.delete')}
               </Button>
               <Button
                 ref={cancelRef}
                 onClick={onClose}
                 isDisabled={isSubmitting}
               >
-                Cancel
+                {t('common.cancel')}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
